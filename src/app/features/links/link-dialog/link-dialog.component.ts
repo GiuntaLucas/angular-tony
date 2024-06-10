@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, effect, input, model, output, viewChildren } from '@angular/core';
 
 @Component({
   selector: 'app-link-dialog',
@@ -8,5 +8,18 @@ import { Component } from '@angular/core';
   styleUrl: './link-dialog.component.scss'
 })
 export class LinkDialogComponent {
+  dialog = viewChildren<ElementRef>('dialog');
+  close = output<void>();
 
+  constructor() {
+    effect(() => {
+      if (this.dialog()) {
+        this.dialog()[0].nativeElement.showModal()
+      }
+    })
+  }
+
+  handleClose() {
+    this.close.emit();
+  }
 }
