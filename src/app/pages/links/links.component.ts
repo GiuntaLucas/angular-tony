@@ -28,6 +28,7 @@ export class LinksComponent {
   links: Signal<Link[]>;
   selectedLink = signal<Link | undefined>(undefined)
   isOpen = signal(false);
+  search = signal('');
 
   constructor() {
     this.links = toSignal(this.#linksService.getAll(), { initialValue: [] });
@@ -53,7 +54,7 @@ export class LinksComponent {
   }
 
   handleSearch(value: string) {
-    console.log(value)
+    this.search.set(value)
   }
 
   toggleDialog() {

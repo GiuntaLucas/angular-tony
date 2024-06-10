@@ -4,7 +4,7 @@
       <button (click)="toggleDialog()" class="btn btn-primary btn-outline ">Create</button>
     </app-link-filter>
   </div>
-  <app-link-list [links]="links()" (edit)="handleEdit($event)" (delete)="handleDelete($event)" />
+  <app-link-list [links]="links()" [search]="search()" (edit)="handleEdit($event)" (delete)="handleDelete($event)" />
 </div>
 
 @if (isOpen()) {
