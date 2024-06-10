@@ -2,7 +2,7 @@ import { Component, Signal, effect, inject, input, signal } from '@angular/core'
 import { LinksService } from '../../services/links.service';
 import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Link } from '../../interfaces/Link';
+import { Link, LinkCategoryFull } from '../../interfaces/Link';
 import { LinkListComponent } from '../../features/links/link-list/link-list.component';
 import { LinkFilterComponent } from '../../features/links/link-filter/link-filter.component';
 import { LinkDialogComponent } from '../../features/links/link-dialog/link-dialog.component';
@@ -27,6 +27,7 @@ import { Router, RouterModule } from '@angular/router';
 export class LinksComponent {
   router = inject(Router);
   links = input<Link[]>([]);
+  categories = input<LinkCategoryFull[]>([]);
   selectedLink = signal<Link | undefined>(undefined)
   isOpen = signal(false);
   search = signal('');

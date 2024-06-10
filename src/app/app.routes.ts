@@ -6,7 +6,7 @@ import { LinksService } from './services/links.service';
 export const routes: Routes = [
   {
     loadComponent: () => LinksComponent, path: 'links',
-    resolve: { links: () => inject(LinksService).getAll() },
+    resolve: { links: () => inject(LinksService).getAll(), categories: () => inject(LinksService).getCategories() },
     runGuardsAndResolvers: 'always'
   }
 ];
