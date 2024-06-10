@@ -7,6 +7,7 @@ import { LinkListComponent } from '../../features/links/link-list/link-list.comp
 import { LinkFilterComponent } from '../../features/links/link-filter/link-filter.component';
 import { LinkDialogComponent } from '../../features/links/link-dialog/link-dialog.component';
 import { LinkFormComponent } from '../../features/links/link-form/link-form.component';
+import { LinkForm } from '../../models/Link';
 
 @Component({
   selector: 'app-links',
@@ -43,11 +44,20 @@ export class LinksComponent {
   }
 
   handleCloseDialog() {
-    this.isOpen.set(false);
-    this.selectedLink.set(undefined);
+    this.resetDialog();
+  }
+
+  handleSave(linkForm: LinkForm) {
+    this.resetDialog()
+    console.log(linkForm)
   }
 
   toggleDialog() {
     this.isOpen.update(x => !x);
+  }
+
+  private resetDialog() {
+    this.isOpen.set(false);
+    this.selectedLink.set(undefined);
   }
 }

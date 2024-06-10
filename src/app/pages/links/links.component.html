@@ -9,6 +9,6 @@
 
 @if (isOpen()) {
   <app-link-dialog (close)="handleCloseDialog()">
-    <app-link-form [link]="selectedLink()" />
+    <app-link-form [link]="selectedLink()" (save)="handleSave($event)" />
   </app-link-dialog>
 }
