@@ -16,6 +16,7 @@ export class LinksService {
   }
 
   getAll() {
+    console.log('RE RUN')
     return this.#http.get<GetAllLinksResponse>('https://back.flyingpad.be/api/v1/links/GetAll').pipe(map(x => x.linksList));
   }
 }

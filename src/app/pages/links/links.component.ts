@@ -1,4 +1,4 @@
-import { Component, Signal, inject, signal } from '@angular/core';
+import { Component, Signal, effect, inject, input, signal } from '@angular/core';
 import { LinksService } from '../../services/links.service';
 import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -8,6 +8,7 @@ import { LinkFilterComponent } from '../../features/links/link-filter/link-filte
 import { LinkDialogComponent } from '../../features/links/link-dialog/link-dialog.component';
 import { LinkFormComponent } from '../../features/links/link-form/link-form.component';
 import { LinkForm } from '../../models/Link';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-links',
@@ -17,41 +18,38 @@ import { LinkForm } from '../../models/Link';
     LinkListComponent,
     LinkFilterComponent,
     LinkDialogComponent,
-    LinkFormComponent
+    LinkFormComponent,
+    RouterModule
   ],
   templateUrl: './links.component.html',
   styleUrl: './links.component.scss'
 })
 export class LinksComponent {
-  #linksService = inject(LinksService);
-
-  links: Signal<Link[]>;
+  router = inject(Router);
+  links = input<Link[]>([]);
   selectedLink = signal<Link | undefined>(undefined)
   isOpen = signal(false);
   search = signal('');
 
-  constructor() {
-    this.links = toSignal(this.#linksService.getAll(), { initialValue: [] });
-  }
-
   handleEdit(link: Link) {
-    console.log('edit', link);
     this.isOpen.set(true);
     this.selectedLink.set(link);
+    this.reload();
   }
 
   handleDelete(id: number) {
-    console.log('delete', id)
+    console.log('delete', id);
+    this.reload();
+  }
+  handleSave(linkForm: LinkForm) {
+    this.resetDialog();
+    this.reload();
   }
 
   handleCloseDialog() {
     this.resetDialog();
   }
 
-  handleSave(linkForm: LinkForm) {
-    this.resetDialog()
-    console.log(linkForm)
-  }
 
   handleSearch(value: string) {
     this.search.set(value)
@@ -64,5 +62,9 @@ export class LinksComponent {
   private resetDialog() {
     this.isOpen.set(false);
     this.selectedLink.set(undefined);
+  }
+
+  private reload() {
+    this.router.navigateByUrl('/links')
   }
 }
