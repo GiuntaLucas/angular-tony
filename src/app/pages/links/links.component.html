@@ -1,6 +1,6 @@
 <div class="flex flex-col justify-center items-center">
   <div class="flex gap-2 mb-2">
-    <app-link-filter>
+    <app-link-filter (search)="handleSearch($event)">
       <button (click)="toggleDialog()" class="btn btn-primary btn-outline ">Create</button>
     </app-link-filter>
   </div>

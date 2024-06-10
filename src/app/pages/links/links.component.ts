@@ -52,6 +52,10 @@ export class LinksComponent {
     console.log(linkForm)
   }
 
+  handleSearch(value: string) {
+    console.log(value)
+  }
+
   toggleDialog() {
     this.isOpen.update(x => !x);
   }
