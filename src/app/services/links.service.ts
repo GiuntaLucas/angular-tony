@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { map, of, tap } from 'rxjs';
-import { GetAllLinkCategoriesResponse, GetAllLinksResponse, GetLinksByCategoryResponse } from '../models/Link';
+import { GetAllLinkCategoriesResponse, GetAllLinksResponse, GetLinksByCategoryResponse, LinkForm } from '../models/Link';
 import { LinkCategoryLight } from '../interfaces/Link';
 
 @Injectable({
@@ -34,5 +34,12 @@ export class LinksService {
 
   delete(linkId: number) {
     return this.#http.delete<GetAllLinksResponse>(`https://back.flyingpad.be/api/v1/links/delete/${linkId}`);
+  }
+
+  createOrUpdate(form: LinkForm) {
+    if(form.businessId) {
+      return this.#http.put<GetAllLinksResponse>(`https://back.flyingpad.be/api/v1/links/update`, form);
+    }
+    return this.#http.post<GetAllLinksResponse>(`https://back.flyingpad.be/api/v1/links/create`, form);
   }
 }

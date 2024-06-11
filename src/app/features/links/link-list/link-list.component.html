@@ -3,8 +3,8 @@
   <li>
     <div class="flex flex-nowrap w-96">
       <div class="grow"> {{link.name}}</div> 
-      <button (click)="handleEdit(link)" class="btn btn-primary btn-outline btn-xs w-14">Edit</button>
-      <button (click)="handleDelete(link.businessId)" class="btn btn-error btn-outline btn-xs w-14">Delete</button>
+      <button type="button" (click)="handleEdit(link)" class="btn btn-primary btn-outline btn-xs w-14">Edit</button>
+      <button type="button" (click)="handleDelete(link.businessId)" class="btn btn-error btn-outline btn-xs w-14">Delete</button>
     </div>
   </li>
   }

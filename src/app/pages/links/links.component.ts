@@ -38,7 +38,6 @@ export class LinksComponent {
   handleEdit(link: Link) {
     this.isOpen.set(true);
     this.selectedLink.set(link);
-    this.reload();
   }
 
   handleDelete(id: number) {
@@ -46,7 +45,7 @@ export class LinksComponent {
   }
   handleSave(linkForm: LinkForm) {
     this.resetDialog();
-    this.reload();
+    this.#linksService.createOrUpdate(linkForm).subscribe(() => this.reload());
   }
 
   handleCloseDialog() {
