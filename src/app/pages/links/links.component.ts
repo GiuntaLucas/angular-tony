@@ -1,7 +1,7 @@
-import { Component, Signal, effect, inject, input, signal } from '@angular/core';
+import { Component, Signal, computed, effect, inject, input, signal } from '@angular/core';
 import { LinksService } from '../../services/links.service';
 import { CommonModule } from '@angular/common';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Link, LinkCategoryFull } from '../../interfaces/Link';
 import { LinkListComponent } from '../../features/links/link-list/link-list.component';
 import { LinkFilterComponent } from '../../features/links/link-filter/link-filter.component';
@@ -10,6 +10,7 @@ import { LinkFormComponent } from '../../features/links/link-form/link-form.comp
 import { LinkForm } from '../../models/Link';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { LinkCategoriesComponent } from '../../features/links/link-categories/link-categories.component';
+import { map, tap } from 'rxjs';
 
 @Component({
   selector: 'app-links',
@@ -28,12 +29,21 @@ import { LinkCategoriesComponent } from '../../features/links/link-categories/li
 })
 export class LinksComponent {
   #router = inject(Router);
+  #activatedRoute = inject(ActivatedRoute);
   #linksService = inject(LinksService)
+  idParam: Signal<string | undefined>
   links = input<Link[]>([]);
   categories = input<LinkCategoryFull[]>([]);
-  selectedLink = signal<Link | undefined>(undefined)
+  selectedLink = signal<Link | undefined>(undefined);
+  selectedCategory = computed(() => this.categories().find(x => x.businessId.toString() === this.idParam() || undefined))
   isOpen = signal(false);
   search = signal('');
+
+  constructor() {
+    this.idParam = toSignal(this.#activatedRoute.queryParams.pipe(
+      map(params => params['category'])
+    ));
+  }
 
   handleEdit(link: Link) {
     this.isOpen.set(true);
@@ -45,7 +55,8 @@ export class LinksComponent {
   }
   handleSave(linkForm: LinkForm) {
     this.resetDialog();
-    this.#linksService.createOrUpdate(linkForm).subscribe(() => this.reload());
+    const id = this.selectedCategory() ? this.selectedCategory()!.businessId.toString() : undefined;
+    this.#linksService.createOrUpdate(linkForm, id).subscribe(() => this.reload());
   }
 
   handleCloseDialog() {
@@ -67,7 +78,7 @@ export class LinksComponent {
   }
 
   private reload() {
-    const {pathname, search} = window.location;
+    const { pathname, search } = window.location;
     const currentUrl = `${pathname}${search}`;
     this.#router.navigateByUrl(currentUrl)
   }
