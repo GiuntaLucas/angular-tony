@@ -1,0 +1,9 @@
+<div class="toast toast-top toast-end">
+  @for (item of toast(); track $index) {
+    <div class="alert alert-info" [class.alert-info]="item.severity === 'INFO'"
+      [class.alert-success]="item.severity === 'SUCCESS'" [class.alert-warning]="item.severity === 'WARNING'"
+      [class.alert-error]="item.severity === 'ERROR'">
+      <span>{{item.message}}</span>
+    </div>
+  }
+</div>

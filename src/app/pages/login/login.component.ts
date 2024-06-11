@@ -4,6 +4,7 @@ import { Credential } from '../../interfaces/Credential';
 import { AuthService } from '../../services/auth.service';
 import { catchError, of, skipWhile } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -15,14 +16,15 @@ import { Router, RouterModule } from '@angular/router';
 export class LoginComponent {
   #authService = inject(AuthService);
   #router = inject(Router);
+  #toast = inject(ToastService);
   handleLogin(cred: Credential) {
-    this.#authService.login(cred).pipe(
-      catchError(err => {
-        console.error(err)
-        return of(cred)
-      }),
-    ).subscribe(() => {
-      this.#router.navigateByUrl('/links');
+    this.#authService.login(cred).subscribe(res => {
+      if (res.success) {
+        this.#toast.toast.set([{ message: 'Logged with success!', severity: 'SUCCESS' }]);
+        this.#router.navigateByUrl('/links');
+      } else {
+        this.#toast.toast.set([{ message: 'Invalid credentials!', severity: 'ERROR' }]);
+      }
     })
   }
 }
