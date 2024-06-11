@@ -4,6 +4,7 @@ import { Credential } from '../interfaces/Credential';
 import { tap } from 'rxjs';
 import { BaseResponse } from '../interfaces/BaseResponse';
 import { Auth } from '../interfaces/Auth';
+import { jwtDecode } from "jwt-decode";
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ export class AuthService {
   }
 
   getCurrentToken(): string | undefined {
-    if(typeof window === "undefined") return;
+    if (typeof window === "undefined") return;
     const token = localStorage.getItem('token');
     if (!token) return;
 
