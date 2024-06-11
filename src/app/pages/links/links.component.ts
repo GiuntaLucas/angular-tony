@@ -8,7 +8,7 @@ import { LinkFilterComponent } from '../../features/links/link-filter/link-filte
 import { LinkDialogComponent } from '../../features/links/link-dialog/link-dialog.component';
 import { LinkFormComponent } from '../../features/links/link-form/link-form.component';
 import { LinkForm } from '../../models/Link';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { LinkCategoriesComponent } from '../../features/links/link-categories/link-categories.component';
 
 @Component({
@@ -27,7 +27,8 @@ import { LinkCategoriesComponent } from '../../features/links/link-categories/li
   styleUrl: './links.component.scss'
 })
 export class LinksComponent {
-  router = inject(Router);
+  #router = inject(Router);
+  #linksService = inject(LinksService)
   links = input<Link[]>([]);
   categories = input<LinkCategoryFull[]>([]);
   selectedLink = signal<Link | undefined>(undefined)
@@ -41,8 +42,7 @@ export class LinksComponent {
   }
 
   handleDelete(id: number) {
-    console.log('delete', id);
-    this.reload();
+    this.#linksService.delete(id).subscribe(() => this.reload());
   }
   handleSave(linkForm: LinkForm) {
     this.resetDialog();
@@ -68,6 +68,8 @@ export class LinksComponent {
   }
 
   private reload() {
-    this.router.navigateByUrl('/links')
+    const {pathname, search} = window.location;
+    const currentUrl = `${pathname}${search}`;
+    this.#router.navigateByUrl(currentUrl)
   }
 }

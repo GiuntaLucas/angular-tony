@@ -31,4 +31,8 @@ export class LinksService {
       map(response => response.linksListByCategory),
     )
   }
+
+  delete(linkId: number) {
+    return this.#http.delete<GetAllLinksResponse>(`https://back.flyingpad.be/api/v1/links/delete/${linkId}`);
+  }
 }
