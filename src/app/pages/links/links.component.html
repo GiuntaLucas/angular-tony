@@ -7,6 +7,9 @@
   <app-link-list [links]="links()" [search]="search()" (edit)="handleEdit($event)" (delete)="handleDelete($event)" />
 </div>
 
+
+<app-link-categories [categories]="categories()"/>
+
 @if (isOpen()) {
   <app-link-dialog (close)="handleCloseDialog()">
     <app-link-form [link]="selectedLink()" (save)="handleSave($event)" />

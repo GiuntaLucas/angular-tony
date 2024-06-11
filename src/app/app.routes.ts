@@ -1,10 +1,10 @@
-import { CanActivateFn, Router, Routes } from '@angular/router';
+import { CanActivateFn, ResolveFn, Router, Routes } from '@angular/router';
 import { LinksComponent } from './pages/links/links.component';
 import { inject } from '@angular/core';
 import { LinksService } from './services/links.service';
 import { LoginComponent } from './pages/login/login.component';
 import { HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin, tap } from 'rxjs';
 import { AuthService } from './services/auth.service';
 import { jwtDecode } from 'jwt-decode';
 
@@ -28,10 +28,10 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
 export const adminGuard: CanActivateFn = (route, state) => {
   const auth = inject(AuthService);
   const token = auth.getCurrentToken();
-  
-  const user: any =jwtDecode(token!);
 
-  if(user.role !== 2) {
+  const user: any = jwtDecode(token!);
+
+  if (user.role !== 2) {
     return false;
   }
 
@@ -58,6 +58,20 @@ export const preventAlreadyAuthGuard: CanActivateFn = (route, state) => {
   return true;
 };
 
+const linksResolver: ResolveFn<any> = (route, state) => {
+  const links = inject(LinksService);
+  const category = route.queryParams['category'];
+  if(category) {
+    return links.getLinksByCategory(category).pipe(tap(console.log));
+  } 
+  return links.getAll()
+}
+
+const categoriesResolver: ResolveFn<any> = (route, state) => {
+  const links = inject(LinksService);
+  return links.getCategories()
+}
+
 export const routes: Routes = [
   {
     loadComponent: () => LoginComponent,
@@ -67,7 +81,7 @@ export const routes: Routes = [
   {
     loadComponent: () => LinksComponent,
     path: 'links',
-    resolve: { links: () => inject(LinksService).getAll(), categories: () => inject(LinksService).getCategories() },
+    resolve: { links: linksResolver, categories: categoriesResolver },
     runGuardsAndResolvers: 'always',
     canActivate: [authGuard]
   },

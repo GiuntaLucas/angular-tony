@@ -9,6 +9,7 @@ import { LinkDialogComponent } from '../../features/links/link-dialog/link-dialo
 import { LinkFormComponent } from '../../features/links/link-form/link-form.component';
 import { LinkForm } from '../../models/Link';
 import { Router, RouterModule } from '@angular/router';
+import { LinkCategoriesComponent } from '../../features/links/link-categories/link-categories.component';
 
 @Component({
   selector: 'app-links',
@@ -19,6 +20,7 @@ import { Router, RouterModule } from '@angular/router';
     LinkFilterComponent,
     LinkDialogComponent,
     LinkFormComponent,
+    LinkCategoriesComponent,
     RouterModule
   ],
   templateUrl: './links.component.html',
