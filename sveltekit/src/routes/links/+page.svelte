@@ -12,8 +12,6 @@
   let isOpen = $state(false);
   let selectedLink = $state<Link | undefined>(undefined);
 
-    $effect(() => console.log(selectedLink))
-
   function handleSearch(value: string) {
     search = value;
   }
@@ -30,7 +28,10 @@
 <div class="flex flex-col justify-center items-center">
   <div class="flex gap-2 mb-2">
     <Filter search={handleSearch}>
-      <button onclick={() => isOpen = true} class="btn btn-primary btn-outline">Create</button>
+      <button
+        onclick={() => (isOpen = true)}
+        class="btn btn-primary btn-outline">Create</button
+      >
     </Filter>
   </div>
   <Links {search} links={data.links} edit={handleEdit} />
@@ -38,9 +39,9 @@
 </div>
 
 {#if isOpen}
-  <Dialog close={handleCloseDialog} >
-    <Form link={selectedLink} />
-  </Dialog> 
+  <Dialog close={handleCloseDialog}>
+    <Form link={selectedLink} save={handleCloseDialog} />
+  </Dialog>
 {/if}
 <!-- @if (isOpen()) {
   <app-link-dialog (close)="handleCloseDialog()">
