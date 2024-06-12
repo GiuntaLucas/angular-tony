@@ -1,6 +1,6 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { invalidate } from "$app/navigation";
+  import { goto, invalidate } from "$app/navigation";
   import type { Link } from "$lib/interfaces/Link";
 
   const { link, save } = $props<{ link: Link, save: () => void }>();
@@ -33,7 +33,7 @@
   action={formUrl}
   method="post"
   use:enhance={() => {
-    return async ({ result }) => {
+    return async () => {
       invalidate("links");
       save();
     };

@@ -1,5 +1,27 @@
-import type { HandleFetch } from '@sveltejs/kit';
-export const handleFetch: HandleFetch = async ({ request, fetch }) => {
-  request.headers.set('Authorization', `Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJidXNpbmVzc0lkIjoiZTEyODY1NWUtOGUyNy00ZWE0LTk0MDQtZWQ5NDdjYTNmYWI2IiwiY3JlYXRlZCI6IjIwMjQtMDYtMTFUMTI6Mzc6NDQuNjg0WiIsIm1vZGlmaWVkIjoiMjAyNC0wNi0xMVQxMjozNzo0NC42ODRaIiwiZmlyc3ROYW1lIjoiQWRtaW4iLCJsYXN0TmFtZSI6Ii4uLiIsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSIsImJpcnRoZGF0ZSI6IjE5ODAtMDEtMDFUMDA6MDA6MDAuMDAwWiIsInJvbGUiOiIyIiwiZXhwIjoxNzE4MjY1ODI0LCJpc3MiOiJodHRwczovL2JhY2suZmx5aW5ncGFkLmJlLyIsImF1ZCI6Imh0dHBzOi8vd3d3LmZseWluZ3BhZC5iZS8ifQ.PI5jHE6sIDRY0kN0H9AhU5KyhRfief2eKK3cFK6wYiPCA4ECa7ZTdwk3WcOSeCou5_ZmMoXl-fe1XswgSi-3BA`)
+import { session } from '$lib/server/session';
+import { redirect, type Handle, type HandleFetch } from '@sveltejs/kit';
+export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
+  if (event.locals) {
+    request.headers.set('Authorization', `Bearer ${event.locals.token}`)
+  }
   return fetch(request)
 };
+
+export const handle: Handle = async ({ event, resolve }) => {
+  event.locals.token = session.token;
+  if (event.url.pathname.startsWith('/links')) {
+    if (!session.token) {
+      redirect(301, '/');
+    }
+  } else if (!['/', '/links'].includes(event.url.pathname)) {
+    redirect(301, '/');
+  }
+  else if (event.url.pathname.startsWith('/')) {
+    if (session.token) {
+      redirect(301, '/links');
+    }
+  }
+
+  const response = await resolve(event);
+  return response;
+}
