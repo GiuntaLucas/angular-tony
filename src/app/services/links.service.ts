@@ -26,13 +26,13 @@ export class LinksService {
     return this.#http.get<GetAllLinksResponse>('https://back.flyingpad.be/api/v1/links/GetAll').pipe(map(x => x.linksList));
   }
 
-  getLinksByCategory(categoryId: number) {
+  getLinksByCategory(categoryId: string) {
     return this.#http.get<GetLinksByCategoryResponse>(`https://back.flyingpad.be/api/v1/links/GetByCategory/${categoryId}`).pipe(
       map(response => response.linksListByCategory),
     )
   }
 
-  delete(linkId: number) {
+  delete(linkId: string) {
     return this.#http.delete<GetAllLinksResponse>(`https://back.flyingpad.be/api/v1/links/delete/${linkId}`);
   }
 

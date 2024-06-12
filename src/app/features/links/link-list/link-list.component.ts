@@ -13,7 +13,7 @@ export class LinkListComponent {
   links = input.required<Link[]>();
   search = input('');
   edit = output<Link>();
-  delete = output<number>();
+  delete = output<string>();
 
   constructor() {
     effect(() => console.log(`Nb links: ${this.links().length}`))
@@ -23,7 +23,7 @@ export class LinkListComponent {
     this.edit.emit(link);
   }
 
-  handleDelete(id: number) {
+  handleDelete(id: string) {
     this.delete.emit(id);
   }
 }

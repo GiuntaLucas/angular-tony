@@ -10,7 +10,7 @@ import { LinkFormComponent } from '../../features/links/link-form/link-form.comp
 import { LinkForm } from '../../models/Link';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { LinkCategoriesComponent } from '../../features/links/link-categories/link-categories.component';
-import { map, tap } from 'rxjs';
+import { BehaviorSubject, map, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-links',
@@ -28,11 +28,11 @@ import { map, tap } from 'rxjs';
   styleUrl: './links.component.scss'
 })
 export class LinksComponent {
-  #router = inject(Router);
+  #refresh$ = new BehaviorSubject('');
   #activatedRoute = inject(ActivatedRoute);
   #linksService = inject(LinksService)
   idParam: Signal<string | undefined>
-  links = input<Link[]>([]);
+  links: Signal<Link[]>;
   categories: Signal<LinkCategoryLight[]>;
   selectedLink = signal<Link | undefined>(undefined);
   selectedCategory = computed(() => this.categories().find(x => x.businessId.toString() === this.idParam() || undefined))
@@ -40,10 +40,21 @@ export class LinksComponent {
   search = signal('');
 
   constructor() {
-    this.idParam = toSignal(this.#activatedRoute.queryParams.pipe(
+    const queryParams$ = this.#activatedRoute.queryParams.pipe(
       map(params => params['category'])
-    ));
+    );
+    const fetchLinks$ = this.#refresh$.pipe(
+      switchMap(() => queryParams$),
+      switchMap((id: string | undefined) => {
+        if (id) {
+          return this.#linksService.getLinksByCategory(id);
+        }
+        return this.#linksService.getAll();
+      })
+    );
 
+    this.idParam = toSignal(queryParams$);
+    this.links = toSignal(fetchLinks$, { initialValue: [] })
     this.categories = toSignal(this.#linksService.getCategories(), { initialValue: [] });
   }
 
@@ -52,7 +63,7 @@ export class LinksComponent {
     this.selectedLink.set(link);
   }
 
-  handleDelete(id: number) {
+  handleDelete(id: string) {
     this.#linksService.delete(id).subscribe(() => this.reload());
   }
   handleSave(linkForm: LinkForm) {
@@ -80,8 +91,6 @@ export class LinksComponent {
   }
 
   private reload() {
-    const { pathname, search } = window.location;
-    const currentUrl = `${pathname}${search}`;
-    this.#router.navigateByUrl(currentUrl)
+    this.#refresh$.next('')
   }
 }
