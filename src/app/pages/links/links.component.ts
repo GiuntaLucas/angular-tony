@@ -35,7 +35,6 @@ export class LinksComponent {
   links = input<Link[]>([]);
   categories = input<LinkCategoryFull[]>([]);
   selectedLink = signal<Link | undefined>(undefined);
-  selectedCategory = computed(() => this.categories().find(x => x.businessId.toString() === this.idParam() || undefined))
   isOpen = signal(false);
   search = signal('');
 
@@ -55,8 +54,7 @@ export class LinksComponent {
   }
   handleSave(linkForm: LinkForm) {
     this.resetDialog();
-    const id = this.selectedCategory() ? this.selectedCategory()!.businessId.toString() : undefined;
-    this.#linksService.createOrUpdate(linkForm, id).subscribe(() => this.reload());
+    this.#linksService.createOrUpdate(linkForm, this.idParam()).subscribe(() => this.reload());
   }
 
   handleCloseDialog() {
