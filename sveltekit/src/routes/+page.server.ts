@@ -19,9 +19,13 @@ export const actions = {
         body: JSON.stringify({ email, password })
       });
       const res = await response.json();
+      if(!res.token) {
+        return fail(400, { message: 'Credential are wrong' });
+      }
+
       session.token = res.token;
     } catch (error) {
-      return fail(500, { message: 'Credential are wrong' });
+      return fail(500, { message: 'An error occurred' });
     }
     redirect(300, '/links');
   }

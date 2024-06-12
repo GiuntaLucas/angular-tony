@@ -1,6 +1,7 @@
 <script>
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
+  import { toast } from "$lib/components/toastService.svelte";
 </script>
 
 <form
@@ -10,8 +11,9 @@
   use:enhance={() => {
     return async ({ result }) => {
       if (result.status === 300) {
-        debugger
         goto(result.location);
+      } else {
+        toast.set({ message: result.data.message, severity: "ERROR" });
       }
     };
   }}
