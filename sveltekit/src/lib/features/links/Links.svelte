@@ -3,9 +3,10 @@
   import { invalidate } from "$app/navigation";
   import { Link } from "$lib/interfaces/Link";
 
-  const { links, search } = $props<{
+  const { links, search, edit } = $props<{
     links: Link[];
     search: string;
+    edit: (link: Link) => void;
   }>();
 
   const linksFiltered = $derived(
@@ -13,7 +14,6 @@
       x.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
     )
   );
-
 </script>
 
 {#if linksFiltered.length > 0}
@@ -22,25 +22,22 @@
       <li>
         <div class="flex flex-nowrap w-96">
           <div class="grow">{link.name}</div>
-          <form method="post" action={`/links/${link.businessId}?/edit`} use:enhance={() => {
-            // action before submit
-            return async({ result }) => {
-              invalidate('links')
-            }
-          }}>
-            <button
-              type="submit"
-              class="btn btn-primary btn-outline btn-xs w-14">Edit</button
-            >
-          </form>
-          <form method="post" action={`/links/${link.businessId}?/delete`}  use:enhance={() => {
-            return async({ result }) => {
-              invalidate('links')
-            }
-          }}>
-            <button
-              type="submit"
-              class="btn btn-error btn-outline btn-xs w-14">Delete</button
+          <button
+            onclick={() => edit(link)}
+            type="button"
+            class="btn btn-primary btn-outline btn-xs w-14">Edit</button
+          >
+          <form
+            method="post"
+            action={`/links/${link.businessId}?/delete`}
+            use:enhance={() => {
+              return async ({ result }) => {
+                invalidate("links");
+              };
+            }}
+          >
+            <button type="submit" class="btn btn-error btn-outline btn-xs w-14"
+              >Delete</button
             >
           </form>
         </div>
