@@ -1,16 +1,16 @@
-import { Component, Signal, computed, effect, inject, input, signal } from '@angular/core';
+import { Component, Signal, inject, signal } from '@angular/core';
 import { LinksService } from '../../services/links.service';
 import { CommonModule } from '@angular/common';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { Link, LinkCategoryFull, LinkCategoryLight } from '../../interfaces/Link';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Link, LinkCategoryLight } from '../../interfaces/Link';
 import { LinkListComponent } from '../../features/links/link-list/link-list.component';
 import { LinkFilterComponent } from '../../features/links/link-filter/link-filter.component';
 import { LinkDialogComponent } from '../../features/links/link-dialog/link-dialog.component';
 import { LinkFormComponent } from '../../features/links/link-form/link-form.component';
 import { LinkForm } from '../../models/Link';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { LinkCategoriesComponent } from '../../features/links/link-categories/link-categories.component';
-import { BehaviorSubject, map, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, delay, map, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-links',
@@ -33,6 +33,7 @@ export class LinksComponent {
   #linksService = inject(LinksService)
   idParam: Signal<string | undefined>
   links: Signal<Link[]>;
+  isLoading = signal<boolean>(false);
   categories: Signal<LinkCategoryLight[]>;
   selectedLink = signal<Link | undefined>(undefined);
   isOpen = signal(false);
@@ -40,7 +41,8 @@ export class LinksComponent {
 
   constructor() {
     const queryParams$ = this.#activatedRoute.queryParams.pipe(
-      map(params => params['category'])
+      map(params => params['category']),
+      tap(() => this.isLoading.set(true))
     );
     const fetchLinks$ = this.#refresh$.pipe(
       switchMap(() => queryParams$),
@@ -49,7 +51,8 @@ export class LinksComponent {
           return this.#linksService.getLinksByCategory(id);
         }
         return this.#linksService.getAll();
-      })
+      }),
+      tap(() => this.isLoading.set(false))
     );
 
     this.idParam = toSignal(queryParams$);
