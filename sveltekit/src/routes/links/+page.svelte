@@ -1,0 +1,14 @@
+<div class="flex flex-col justify-center items-center">
+  <div class="flex gap-2 mb-2">
+    <!-- <app-link-filter (search)="handleSearch($event)">
+      <button (click)="toggleDialog()" class="btn btn-primary btn-outline ">Create</button>
+    </app-link-filter> -->
+  </div>
+  <!-- <app-link-list [links]="links()" [search]="search()" (edit)="handleEdit($event)" (delete)="handleDelete($event)" /> -->
+</div>
+
+<!-- @if (isOpen()) {
+  <app-link-dialog (close)="handleCloseDialog()">
+    <app-link-form [link]="selectedLink()" (save)="handleSave($event)" />
+  </app-link-dialog>
+} -->
