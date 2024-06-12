@@ -58,20 +58,6 @@ export const preventAlreadyAuthGuard: CanActivateFn = (route, state) => {
   return true;
 };
 
-const linksResolver: ResolveFn<any> = (route, state) => {
-  const links = inject(LinksService);
-  const category = route.queryParams['category'];
-  if(category) {
-    return links.getLinksByCategory(category).pipe(tap(console.log));
-  } 
-  return links.getAll()
-}
-
-const categoriesResolver: ResolveFn<any> = (route, state) => {
-  const links = inject(LinksService);
-  return links.getCategories()
-}
-
 export const routes: Routes = [
   {
     loadComponent: () => LoginComponent,
@@ -81,7 +67,6 @@ export const routes: Routes = [
   {
     loadComponent: () => LinksComponent,
     path: 'links',
-    resolve: { links: linksResolver, categories: categoriesResolver },
     runGuardsAndResolvers: 'always',
     canActivate: [authGuard]
   },

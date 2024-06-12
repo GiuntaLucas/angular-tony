@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { LinkCategoryFull } from '../../../interfaces/Link';
+import { LinkCategoryLight } from '../../../interfaces/Link';
 
 @Component({
   selector: 'app-link-categories',
@@ -10,5 +10,5 @@ import { LinkCategoryFull } from '../../../interfaces/Link';
   styleUrl: './link-categories.component.scss'
 })
 export class LinkCategoriesComponent {
-  categories = input.required<LinkCategoryFull[]>();
+  categories = input.required<LinkCategoryLight[]>();
 }

@@ -2,7 +2,7 @@ import { Component, Signal, computed, effect, inject, input, signal } from '@ang
 import { LinksService } from '../../services/links.service';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { Link, LinkCategoryFull } from '../../interfaces/Link';
+import { Link, LinkCategoryFull, LinkCategoryLight } from '../../interfaces/Link';
 import { LinkListComponent } from '../../features/links/link-list/link-list.component';
 import { LinkFilterComponent } from '../../features/links/link-filter/link-filter.component';
 import { LinkDialogComponent } from '../../features/links/link-dialog/link-dialog.component';
@@ -33,7 +33,7 @@ export class LinksComponent {
   #linksService = inject(LinksService)
   idParam: Signal<string | undefined>
   links = input<Link[]>([]);
-  categories = input<LinkCategoryFull[]>([]);
+  categories: Signal<LinkCategoryLight[]>;
   selectedLink = signal<Link | undefined>(undefined);
   selectedCategory = computed(() => this.categories().find(x => x.businessId.toString() === this.idParam() || undefined))
   isOpen = signal(false);
@@ -43,6 +43,8 @@ export class LinksComponent {
     this.idParam = toSignal(this.#activatedRoute.queryParams.pipe(
       map(params => params['category'])
     ));
+
+    this.categories = toSignal(this.#linksService.getCategories(), { initialValue: [] });
   }
 
   handleEdit(link: Link) {
