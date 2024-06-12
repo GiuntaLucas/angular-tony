@@ -1,7 +1,7 @@
-<ul class="fixed top-[50px] right-0 menu bg-base-200 rounded-box gap-4">
+<ul class="fixed top-[60px] right-0 menu bg-base-200 rounded-box gap-4">
   @for (category of categories(); track $index) {
   <li>
-    <a class="w-full" [routerLink]="['/links']" [queryParams]="{category: category.businessId}">
+    <a class="w-full " [routerLink]="['/links']" routerLinkActive="active !text-blue-400" [queryParams]="{category: category.businessId}">
       <div class="flex flex-nowrap w-96">
         {{category.name}}
       </div>
