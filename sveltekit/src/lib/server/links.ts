@@ -1,7 +1,20 @@
-export async function getCategories() {
+import type { Link, LinkCategoryLight } from "$lib/interfaces/Link";
+
+export async function getCategories(): Promise<LinkCategoryLight[]> {
   const response = await fetch('https://back.flyingpad.be/api/v1/LinkCategories/GetAll');
   const data = await response.json()
   return data.linkCategories;
+}
+
+export async function getLinks(categoryId: string | undefined): Promise<Link[]> {
+  if (categoryId) {
+    const response = await fetch(`https://back.flyingpad.be/api/v1/links/GetByCategory/${categoryId}`);
+    const data = await response.json()
+    return data.linksListByCategory;
+  }
+  const response = await fetch('https://back.flyingpad.be/api/v1/links/GetAll');
+  const data = await response.json()
+  return data.linksList;
 }
 
 // getAll() {
