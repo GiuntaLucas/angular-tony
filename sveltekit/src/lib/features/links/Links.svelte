@@ -2,6 +2,7 @@
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
   import { Link } from "$lib/interfaces/Link";
+  import { fly } from "svelte/transition";
 
   const { links, search, edit } = $props<{
     links: Link[];
@@ -18,8 +19,8 @@
 
 {#if linksFiltered.length > 0}
   <ul class="menu bg-base-200 rounded-box gap-4">
-    {#each linksFiltered as link}
-      <li>
+    {#each linksFiltered as link, i}
+      <li transition:fly={{x: 50, duration: 500}}>
         <div class="flex flex-nowrap w-96">
           <div class="grow">{link.name}</div>
           <button
