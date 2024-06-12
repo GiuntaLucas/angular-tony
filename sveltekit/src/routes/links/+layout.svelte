@@ -1,13 +1,10 @@
 <script lang="ts">
-  import Categories from '$lib/features/links/categories.svelte';
-  import type { LayoutServerData } from './$types';
-  const { data } = $props();
+  import Categories from "$lib/features/links/categories.svelte";
+  import type { LayoutServerData } from "./$types";
 
-  console.log(data.categories)
+  const { data } = $props<{ data: LayoutServerData }>();
 </script>
 
-<slot/>
+<slot />
 
-<Categories categories={data.categories}/>
-<!-- <app-link-categories [categories]="categories()" /> -->
-
+<Categories {...data} />
