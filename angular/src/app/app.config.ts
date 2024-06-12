@@ -11,6 +11,5 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding(), withRouterConfig({onSameUrlNavigation: 'reload'}), withViewTransitions()), 
     provideClientHydration(), 
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
-    
   ]
 };

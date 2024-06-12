@@ -11,6 +11,7 @@
   {#each categories as category}
     <li>
       <a
+        data-sveltekit-preload-data="hover"
         class="w-full"
         class:!text-blue-400={category.businessId === categoryId}
         class:active={category.businessId === categoryId}
