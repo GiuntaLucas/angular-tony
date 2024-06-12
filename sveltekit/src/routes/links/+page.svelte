@@ -8,14 +8,6 @@
   const { data } = $props<{data: PageServerLoad}>();
   let search = $state('');
 
-  function handleEdit(link: Link) {
-    console.log(link)
-  }
-
-  function handleDelete(id: string) {
-    console.log(id)
-  }
-
   function handleSearch(value: string) {
     search = value;
   }
@@ -27,7 +19,7 @@
       <button class="btn btn-primary btn-outline">Create</button>
     </Filter>
   </div>
-  <Links search={search} links={data.links} onEdit={handleEdit} onDelete={handleDelete} />
+  <Links search={search} links={data.links} />
   <!-- <app-link-list [links]="links()" [search]="search()" (edit)="handleEdit($event)" (delete)="handleDelete($event)" /> -->
 </div>
 

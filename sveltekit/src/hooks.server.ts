@@ -1,0 +1,5 @@
+import type { HandleFetch } from '@sveltejs/kit';
+export const handleFetch: HandleFetch = async ({ request, fetch }) => {
+  request.headers.set('Authorization', `Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJidXNpbmVzc0lkIjoiZTEyODY1NWUtOGUyNy00ZWE0LTk0MDQtZWQ5NDdjYTNmYWI2IiwiY3JlYXRlZCI6IjIwMjQtMDYtMTFUMTI6Mzc6NDQuNjg0WiIsIm1vZGlmaWVkIjoiMjAyNC0wNi0xMVQxMjozNzo0NC42ODRaIiwiZmlyc3ROYW1lIjoiQWRtaW4iLCJsYXN0TmFtZSI6Ii4uLiIsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSIsImJpcnRoZGF0ZSI6IjE5ODAtMDEtMDFUMDA6MDA6MDAuMDAwWiIsInJvbGUiOiIyIiwiZXhwIjoxNzE4MjY1ODI0LCJpc3MiOiJodHRwczovL2JhY2suZmx5aW5ncGFkLmJlLyIsImF1ZCI6Imh0dHBzOi8vd3d3LmZseWluZ3BhZC5iZS8ifQ.PI5jHE6sIDRY0kN0H9AhU5KyhRfief2eKK3cFK6wYiPCA4ECa7ZTdwk3WcOSeCou5_ZmMoXl-fe1XswgSi-3BA`)
+  return fetch(request)
+};

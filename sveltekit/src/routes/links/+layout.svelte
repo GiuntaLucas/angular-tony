@@ -3,6 +3,7 @@
   import type { LayoutServerData } from "./$types";
 
   const { data } = $props<{ data: LayoutServerData }>();
+
 </script>
 
 <slot />
